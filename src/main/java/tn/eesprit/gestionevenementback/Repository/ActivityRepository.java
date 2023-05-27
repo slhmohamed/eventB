@@ -5,6 +5,6 @@ import tn.eesprit.gestionevenementback.Entities.Activity;
 
 import java.util.List;
 
-public interface ActivityRepository extends JpaRepository<Activity, Integer> {
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
 }

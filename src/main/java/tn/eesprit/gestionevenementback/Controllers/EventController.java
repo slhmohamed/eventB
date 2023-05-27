@@ -1,6 +1,7 @@
 package tn.eesprit.gestionevenementback.Controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import tn.eesprit.gestionevenementback.Repository.EventRepository;
 import tn.eesprit.gestionevenementback.Services.IEventService;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -17,11 +19,11 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/event")
 public class EventController {
-    private final IEventService eventService;
+    private final IEventService iEventService;
     private final EventRepository eventRepository;
     @PostMapping("/add-events")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        Event _event = eventService.addEvent(new Event(
+        Event _event = iEventService.addEvent(new Event(
                 event.getTitle(), event.getDescription(),event.getStartDate(),event.getEndDate(),event.getLieu(),event.getType()));
         return new ResponseEntity<>(_event, HttpStatus.CREATED);
     }
@@ -36,11 +38,11 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
 
     @GetMapping("/all-events")
     public ResponseEntity<List<Event>> getAllEvents(){
-       return  new ResponseEntity<>( eventService.retrieveAllEvents(), HttpStatus.OK);
+       return  new ResponseEntity<>( iEventService.retrieveAllEvents(), HttpStatus.OK);
     }
     @DeleteMapping("/delete-event/{id}")
     public ResponseEntity<HttpStatus> deleteEvent(@PathVariable("id") long id) {
-        eventService.deleteEvent(id);
+        iEventService.deleteEvent(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -55,7 +57,7 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
         _event.setStartDate(event.getStartDate());
         _event.setDescription(event.getDescription());
         _event.setType(event.getType());
-        eventRepository.save(_event);
+        iEventService.addEvent(_event);
 
         return new ResponseEntity<>(_event, HttpStatus.OK);
 
@@ -66,4 +68,21 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
         List<Object[]> list=eventRepository.countTotalEventsByType();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @GetMapping("/findAllByStartDateBetween/{start}/{end}")
+    public ResponseEntity<List <Event>> findAllByStartDateBetween(@PathVariable("start")    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+                                                  @PathVariable("end")    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
+        return new ResponseEntity<>(iEventService.findAllByStartDateBetween(start,end),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/findEventByTitleContainingOrDescriptionContaining/{title}/{description}")
+    public ResponseEntity<List <Event>> findEventByTitleContainingOrDescriptionContaining(@PathVariable("title")
+                                                                                              String title     ,
+                                                                  @PathVariable("description")    String description){
+        return new ResponseEntity<>(iEventService.findEventByTitleContainingOrDescriptionContaining(title,description),HttpStatus.OK);
+
+    }
+
+
 }

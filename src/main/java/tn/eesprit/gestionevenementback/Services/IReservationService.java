@@ -9,4 +9,6 @@ public interface IReservationService {
     Reservation addOrUpdateReservation(Reservation Reservation);
     Reservation retrieveReservation(Integer id);
     void removeReservation(Integer id);
+
+    Reservation affecteReservatioToUser(Long eventId,Long userId);
 }

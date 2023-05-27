@@ -20,28 +20,20 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 
 public class FactureController {
-    private final IFactureService factureService;
-    private final UserRepository userRepository;
-    private final FactureRepository factureRepository;
+    private final IFactureService iFactureService;
+
     @GetMapping("/users/{id}/factures")
     public ResponseEntity<List<Facture>> getAllFactureByUserid(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
 
-        List<Facture> factures = new ArrayList<Facture>();
-        factures.addAll(user.getFactures());
 
-        return new ResponseEntity<>(factures, HttpStatus.OK);
+        return new ResponseEntity<>(iFactureService.listFactureByUser(id), HttpStatus.OK);
     }
     @PostMapping("/users/{id}/facture")
-    public ResponseEntity<Facture> creatReclamation(@PathVariable(value = "id") Long id,
+    public ResponseEntity<Facture> creatFacture(@PathVariable(value = "id") Long id,
                                                         @RequestBody Facture facture) throws ResourceNotFoundException {
-        Facture _facture = userRepository.findById(id).map((User user) -> {
-            user.getFactures().add(facture);
-            return factureRepository.save(facture);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found User with id = " + id));
 
-        return new ResponseEntity<>(_facture, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(iFactureService.affecteFactureToUser(facture,id), HttpStatus.CREATED);
     }
 
 }

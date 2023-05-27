@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,16 +17,21 @@ import java.io.Serializable;
 public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer ReservationId;
+    Long ReservationId;
 
 
 
-    @OneToOne(mappedBy = "reservation",cascade = CascadeType.REMOVE)
-    Payement payement;
-    @ManyToOne
-    ServiceClient serviceClient;
-    @ManyToOne
+    @OneToOne
+     User user;
+    @OneToOne
     Event event;
-    @ManyToOne
-    User user;
+
+    LocalDateTime  dateReservation;
+
+public Reservation(User user,Event event ){
+    this.user=user;
+    this.event=event;
+    this.dateReservation= LocalDateTime.now();
+}
+
 }
