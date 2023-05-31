@@ -17,9 +17,7 @@ import java.util.Date;
 public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long ReservationId;
-
-
+    private Long id;
 
     @OneToOne
      User user;
@@ -27,6 +25,8 @@ public class Reservation implements Serializable {
     Event event;
 
     LocalDateTime  dateReservation;
+
+
 
 public Reservation(User user,Event event ){
     this.user=user;

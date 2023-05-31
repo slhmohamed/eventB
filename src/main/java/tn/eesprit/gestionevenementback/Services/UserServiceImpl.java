@@ -20,5 +20,10 @@ public class UserServiceImpl implements IUserService{
     @Override
     public void removeUser(Long id){UserRepo.deleteById(id);}
 
+    @Override
+    public List<User> sarch(String value) {
+        return UserRepo.findUserByEmail(value);
+    }
+
 }
 

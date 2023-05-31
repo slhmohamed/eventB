@@ -11,4 +11,5 @@ public interface IReservationService {
     void removeReservation(Integer id);
 
     Reservation affecteReservatioToUser(Long eventId,Long userId);
+    void delete(Integer id);
 }

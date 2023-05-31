@@ -53,28 +53,51 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         User _user = userRepository.findByUsername(loginRequest.getUsername()).get();
-        if (!_user.getActive()) {
+
+        if(_user.getNbIteration()>=3){
+            _user.setBlocked(true);
+            userRepository.save(_user);
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error:Your account is still deactivated!"));
+                    .body(new MessageResponse("Error : Your account is blocked!"));
+
+
+        }else  if(_user.getNbIteration()<3){
+            _user.setNbIteration(_user.getNbIteration()+1);
+            userRepository.save(_user);
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error : Username and mot de passe incorrect!"));
         }
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        if(!_user.isBlocked()) {
+            if (!_user.getActive()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error:Your account is still deactivated!"));
+            }
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                System.out.println(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+        }else{
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error:Your account is blocked!"));
+        }
 
 }
 

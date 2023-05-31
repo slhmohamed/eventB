@@ -159,5 +159,10 @@ public class UserController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @GetMapping("/search/{value}")
+    public  ResponseEntity<List<User>> serach(@PathVariable String value){
+        return new ResponseEntity<>(userService.sarch(value), HttpStatus.OK);
+    }
 }
 

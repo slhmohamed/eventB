@@ -38,7 +38,7 @@ import java.util.Optional;
 
         User _user=user.get();
 
-        Optional<Event> event=eventRepository.findById(userID);
+        Optional<Event> event=eventRepository.findById(eventId);
 
         Event _event=event.get();
 
@@ -46,6 +46,12 @@ import java.util.Optional;
 
         return reservationRepository.save(reservation);
     }
+
+    @Override
+    public void delete(Integer id) {
+        reservationRepository.deleteById(id);
+    }
+
     @Override
     public Reservation retrieveReservation(Integer id){return reservationRepository.findById(id).orElse(null);}
     @Override

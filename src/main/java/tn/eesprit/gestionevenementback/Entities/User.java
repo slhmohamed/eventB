@@ -40,7 +40,11 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    private Boolean active= false;;
+    private Boolean active= false;
+
+    private boolean blocked=false;
+
+    private Long nbIteration =0L;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

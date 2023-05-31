@@ -9,4 +9,6 @@ public interface IUserService {
     User addOrUpdateUser(User User);
     User retrieveUser(Long id);
     void removeUser(Long id);
+
+    List<User> sarch(String value);
 }

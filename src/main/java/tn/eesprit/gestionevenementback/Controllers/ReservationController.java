@@ -35,5 +35,11 @@ public class ReservationController {
         return new ResponseEntity<>(iReservationService.retrieveAllReservations(), HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteReservation(@PathVariable Integer id){
+        iReservationService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }
