@@ -18,7 +18,7 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String status="Not confirmed";
     @OneToOne
      User user;
     @OneToOne

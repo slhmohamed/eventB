@@ -59,6 +59,10 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private Set<Facture> factures = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private Set<Event> events = new HashSet<>();
     public User(String username,String email,String password)
     {
         this.username=username;

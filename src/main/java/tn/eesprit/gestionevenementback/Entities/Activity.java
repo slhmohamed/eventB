@@ -20,14 +20,19 @@ public class Activity implements Serializable {
 
     String title;
     String description;
-     String debut;
+
+    String type;
+    double montant;
+    String debut;
      String fin;
-       public Activity(String title,String description,String debut,String fin){
+       public Activity(String title,String description,String debut,String fin,String type,double montant){
 
            this.title=title;
            this.description=description;
            this.debut=debut;
            this.fin=fin;
+           this.type=type;
+           this.montant=montant;
        }
 
 

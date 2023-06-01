@@ -32,15 +32,24 @@ import java.util.Optional;
     }
 
     @Override
+    public Reservation retrieveReservation(Integer id) {
+        return null;
+    }
+
+    @Override
     public Reservation affecteReservatioToUser(Long eventId,Long userID){
 
         Optional<User> user=userRepository.findById(userID);
 
         User _user=user.get();
 
+
+
         Optional<Event> event=eventRepository.findById(eventId);
 
         Event _event=event.get();
+        _user.getEvents().add(_event);
+        userRepository.save(_user);
 
         Reservation reservation=new Reservation(_user,_event);
 
@@ -48,13 +57,10 @@ import java.util.Optional;
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         reservationRepository.deleteById(id);
     }
 
-    @Override
-    public Reservation retrieveReservation(Integer id){return reservationRepository.findById(id).orElse(null);}
-    @Override
-    public void removeReservation(Integer id){reservationRepository.deleteById(id);}
+
 
 }
