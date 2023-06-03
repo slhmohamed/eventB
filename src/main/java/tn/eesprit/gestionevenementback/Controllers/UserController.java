@@ -22,6 +22,7 @@ import tn.eesprit.gestionevenementback.Services.IUserService;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -163,6 +164,24 @@ public class UserController {
     @GetMapping("/search/{value}")
     public  ResponseEntity<List<User>> serach(@PathVariable String value){
         return new ResponseEntity<>(userService.sarch(value), HttpStatus.OK);
+    }
+
+    @PutMapping("/updateBlocked/{username}")
+    public void updateBlocked(@PathVariable String username){
+
+        Optional<User> user=userRepository.findByUsername(username);
+        if(user.isPresent()){
+            User _user=user.get();
+
+            _user.setNbIteration(_user.getNbIteration()+1);
+            if(_user.getNbIteration()>=3){
+                _user.setBlocked(true);
+            }
+
+            System.out.println("xxxxxxxxxx + " + _user.getNbIteration());
+
+            userRepository.save(_user);
+        }
     }
 }
 

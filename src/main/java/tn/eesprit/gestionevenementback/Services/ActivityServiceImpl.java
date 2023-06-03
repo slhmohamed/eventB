@@ -23,6 +23,7 @@ import java.util.List;
     ActivityRepository activityRepository;
     @Override
     public Activity affecteActivityToEvent(Activity activity, Long id) {
+
         Activity _activity = eventRepository.findById(id).map((Event event) -> {
             event.getActivites().add(activity);
             return activityRepository.save(activity);

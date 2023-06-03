@@ -17,7 +17,7 @@ import java.util.List;
  @RequestMapping("/api/activity")
 public class ActivityController {
      @Autowired
-     IActivityService iActivityService;
+    private IActivityService iActivityService;
 
     @GetMapping("/events/{id}/activity")
     public ResponseEntity<List<Activity>> getAllActivityByEventId(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {

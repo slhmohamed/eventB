@@ -5,8 +5,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.eesprit.gestionevenementback.Entities.Activity;
 import tn.eesprit.gestionevenementback.Entities.Event;
 import tn.eesprit.gestionevenementback.Exception.ResourceNotFoundException;
+import tn.eesprit.gestionevenementback.Repository.ActivityRepository;
 import tn.eesprit.gestionevenementback.Repository.EventRepository;
 import tn.eesprit.gestionevenementback.Services.IEventService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import java.util.List;
 public class EventController {
     private final IEventService iEventService;
     private final EventRepository eventRepository;
+
+    private final ActivityRepository activityRepository;
     @PostMapping("/add-events")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         Event _event = iEventService.addEvent(new Event(
@@ -50,7 +54,6 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
     public ResponseEntity<Event> updateEvent(@PathVariable(value = "id") Long id,@RequestBody Event event) throws ResourceNotFoundException {
         Event _event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
-
         _event.setTitle(event.getTitle());
         _event.setLieu(event.getLieu());
         _event.setEndDate(event.getEndDate());
@@ -62,25 +65,37 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
         return new ResponseEntity<>(_event, HttpStatus.OK);
 
     }
-
     @GetMapping("/event-by-type")
     public ResponseEntity< List<Object[]>> getEventByType(){
         List<Object[]> list=eventRepository.countTotalEventsByType();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
     @GetMapping("/findAllByStartDateBetween/{start}/{end}")
     public ResponseEntity<List <Event>> findAllByStartDateBetween(@PathVariable("start")    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
                                                   @PathVariable("end")    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
         return new ResponseEntity<>(iEventService.findAllByStartDateBetween(start,end),HttpStatus.OK);
 
     }
-
     @GetMapping("/findEventByTitleContainingOrDescriptionContaining/{title}/{description}")
     public ResponseEntity<List <Event>> findEventByTitleContainingOrDescriptionContaining(@PathVariable("title")
                                                                                               String title     ,
                                                                   @PathVariable("description")    String description){
         return new ResponseEntity<>(iEventService.findEventByTitleContainingOrDescriptionContaining(title,description),HttpStatus.OK);
+
+    }
+    @DeleteMapping("/deleteActivity/{id}/{activitieId}")
+    public void deleteActivity(@PathVariable Long id,@PathVariable Long activitieId){
+
+        Event _event=eventRepository.findById(id).get();
+
+   Activity _activity=activityRepository.findByActivityId(activitieId).get();
+
+   System.out.println(activitieId);
+
+
+boolean activities=_event.getActivites().remove(_activity);
+        eventRepository.save(_event);
+
 
     }
 

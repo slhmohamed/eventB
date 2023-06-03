@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -24,14 +25,17 @@ public class Reservation implements Serializable {
     @OneToOne
     Event event;
 
-    LocalDateTime  dateReservation;
+
+    Date dateReservation  ;
 
 
 
 public Reservation(User user,Event event ){
     this.user=user;
     this.event=event;
-    this.dateReservation= LocalDateTime.now();
+    SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+    Date dateReservation = new Date(System.currentTimeMillis());
+    this.dateReservation= dateReservation;
 }
 
 }

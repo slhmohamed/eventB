@@ -1,15 +1,19 @@
 package tn.eesprit.gestionevenementback.Controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.eesprit.gestionevenementback.Entities.*;
 import tn.eesprit.gestionevenementback.Exception.ResourceNotFoundException;
 import tn.eesprit.gestionevenementback.Repository.EventRepository;
+import tn.eesprit.gestionevenementback.Repository.ReservationRepository;
 import tn.eesprit.gestionevenementback.Repository.UserRepository;
 import tn.eesprit.gestionevenementback.Services.IReservationService;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,8 @@ public class ReservationController {
     private final UserRepository userRepository;
 
     private final EventRepository eventRepository;
+
+    private final ReservationRepository reservationRepository;
 
 
     @PostMapping("/user/{userId}/reservation/{eventId}")
@@ -56,5 +62,10 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+@GetMapping("/getReservation/{start}/{end}")
+    public ResponseEntity<List<Reservation>> getReservation(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
 
+        List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetween(start,end);
+    return new ResponseEntity<>(reservationList, HttpStatus.OK);
+    }
 }

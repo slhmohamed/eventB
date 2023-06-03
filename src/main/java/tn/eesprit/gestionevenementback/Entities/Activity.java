@@ -16,7 +16,7 @@ import java.util.Date;
 public class Activity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long ActivityId;
+    Long activityId;
 
     String title;
     String description;
