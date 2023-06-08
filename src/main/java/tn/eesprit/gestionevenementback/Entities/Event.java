@@ -25,7 +25,9 @@ import java.util.Set;
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-
+        @Lob
+        @Column(name = "imagedata",length = 1000)
+        private byte[] imageData;
         private String title;
 
         private Date startDate;
@@ -34,21 +36,22 @@ import java.util.Set;
         private String lieu;
         private EventType type;
 
+        private String lang;
+        private String lat;
 
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
         @JoinColumn(name = "event_id")
         private Set<Activity> activites = new HashSet<>();
-
-
-
-
-        public Event(String title,String description,Date startDate,Date endDate,String lieu,EventType type){
-
+        public Event(String title,String description,Date startDate,Date endDate,String lieu,
+                     String type,String lang,String lat, byte[] imageData){
             this.title=title;
             this.description=description;
             this.startDate=startDate;
             this.endDate=endDate;
             this.lieu=lieu;
-            this.type=type;
+            this.type= EventType.valueOf(type);
+            this.lang=lang;
+            this.lat=lat;
+            this.imageData=imageData;
         }
     }

@@ -1,10 +1,14 @@
 package tn.eesprit.gestionevenementback.Controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tn.eesprit.gestionevenementback.Entities.Activity;
 import tn.eesprit.gestionevenementback.Entities.Event;
 import tn.eesprit.gestionevenementback.Exception.ResourceNotFoundException;
@@ -12,9 +16,13 @@ import tn.eesprit.gestionevenementback.Repository.ActivityRepository;
 import tn.eesprit.gestionevenementback.Repository.EventRepository;
 import tn.eesprit.gestionevenementback.Services.IEventService;
 import org.springframework.http.ResponseEntity;
+import tn.eesprit.gestionevenementback.dto.EventRequest;
+import tn.eesprit.gestionevenementback.utils.ImageUtils;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +34,28 @@ public class EventController {
 
     private final ActivityRepository activityRepository;
     @PostMapping("/add-events")
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        Event _event = iEventService.addEvent(new Event(
-                event.getTitle(), event.getDescription(),event.getStartDate(),event.getEndDate(),event.getLieu(),event.getType()));
+    public ResponseEntity<Event> createEvent(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("event") String event) throws IOException {
+        EventRequest newEvent = new ObjectMapper().readValue(event, EventRequest.class);
+
+
+
+
+        Event _event = iEventService.addEvent(newEvent,file);
         return new ResponseEntity<>(_event, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path="/event/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] getPhoto(@PathVariable("id") Long id) throws Exception{
+        Optional<Event> emp = eventRepository.findById(id);
+        if(emp.isPresent()) {
+            System.out.println(emp.get().toString());
+
+            byte[] images = ImageUtils.decompressImage(emp.get().getImageData());
+            return images;
+        }else{
+            return null;
+        }
     }
 @GetMapping("/get-event/{id}")
 public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
@@ -60,7 +86,7 @@ public ResponseEntity<Event> getEvent(@PathVariable(value = "id") Long id) throw
         _event.setStartDate(event.getStartDate());
         _event.setDescription(event.getDescription());
         _event.setType(event.getType());
-        iEventService.addEvent(_event);
+        eventRepository.save(_event);
 
         return new ResponseEntity<>(_event, HttpStatus.OK);
 

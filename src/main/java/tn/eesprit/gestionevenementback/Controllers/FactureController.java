@@ -14,6 +14,7 @@ import tn.eesprit.gestionevenementback.Repository.UserRepository;
 import tn.eesprit.gestionevenementback.Services.EmailService;
 import tn.eesprit.gestionevenementback.Services.IFactureService;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +56,9 @@ public class FactureController {
 
         return new ResponseEntity<>(iFactureService.affecteFactureToUser(facture,id), HttpStatus.CREATED);
     }
-
+@PostMapping("/sendFacture/{attechment}")
+    public ResponseEntity<?> sendFacture(@RequestBody String to,@PathVariable String attechment) throws MessagingException {
+        iFactureService.sednFacture(to,attechment);
+        return new ResponseEntity<>("",HttpStatus.OK);
+}
 }
