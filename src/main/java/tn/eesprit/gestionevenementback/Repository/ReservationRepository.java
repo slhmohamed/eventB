@@ -16,4 +16,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByDateReservationBetweens(@Param("start")Date start,@Param("endD") Date endD);
     @Query( "SELECT d.event ,COUNT(d) AS counts FROM Reservation d    GROUP BY d.event    ORDER BY counts desc ")
     List<Object[]> statEvent( );
+
+    @Query( "SELECT d.user ,COUNT(d) AS counts FROM Reservation d    GROUP BY d.user    ORDER BY counts desc ")
+    List<Object[]> statUser( );
 }

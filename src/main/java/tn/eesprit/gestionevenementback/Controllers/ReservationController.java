@@ -71,4 +71,10 @@ public class ReservationController {
         List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetweens(start,endD);
     return new ResponseEntity<>(reservationList, HttpStatus.OK);
     }
+    @GetMapping("/statistique")
+    public ResponseEntity< List<Object[]>> statEvent(){
+        List<Object[]> list=reservationRepository.statUser();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
 }

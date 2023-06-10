@@ -142,8 +142,3 @@ boolean activities=_event.getActivites().remove(_activity);
 
 }
 
-@Data
-class stat{
-    Event event;
-    int value;
-}
