@@ -62,10 +62,13 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-@GetMapping("/getReservation/{start}/{end}")
-    public ResponseEntity<List<Reservation>> getReservation(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
+@GetMapping("/getReservation/{start}/{endD}")
+    public ResponseEntity<List<Reservation>> getReservation(@PathVariable
+                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+                                                            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                            Date endD){
 
-        List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetween(start,end);
+        List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetweens(start,endD);
     return new ResponseEntity<>(reservationList, HttpStatus.OK);
     }
 }

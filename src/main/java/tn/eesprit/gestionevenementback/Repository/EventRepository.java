@@ -16,4 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByStartDateBetween(Date start, Date end);
     List <Event> findEventByTitleContainingOrDescriptionContaining(String title,String description);
 
+
+
+
 }

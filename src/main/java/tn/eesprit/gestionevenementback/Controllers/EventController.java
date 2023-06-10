@@ -2,6 +2,7 @@ package tn.eesprit.gestionevenementback.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import tn.eesprit.gestionevenementback.Entities.Event;
 import tn.eesprit.gestionevenementback.Exception.ResourceNotFoundException;
 import tn.eesprit.gestionevenementback.Repository.ActivityRepository;
 import tn.eesprit.gestionevenementback.Repository.EventRepository;
+import tn.eesprit.gestionevenementback.Repository.ReservationRepository;
+import tn.eesprit.gestionevenementback.Repository.UserRepository;
 import tn.eesprit.gestionevenementback.Services.IEventService;
 import org.springframework.http.ResponseEntity;
 import tn.eesprit.gestionevenementback.dto.EventRequest;
@@ -31,6 +34,10 @@ import java.util.Optional;
 public class EventController {
     private final IEventService iEventService;
     private final EventRepository eventRepository;
+
+    private final UserRepository userRepository;
+
+    private  final ReservationRepository reservationRepository;
 
     private final ActivityRepository activityRepository;
     @PostMapping("/add-events")
@@ -125,5 +132,18 @@ boolean activities=_event.getActivites().remove(_activity);
 
     }
 
+    @GetMapping("/statEvent")
 
+    public ResponseEntity< List<Object[]>> statEvent(){
+
+        List<Object[]> list=reservationRepository.statEvent();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+}
+
+@Data
+class stat{
+    Event event;
+    int value;
 }

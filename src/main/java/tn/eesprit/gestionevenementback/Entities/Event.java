@@ -21,7 +21,6 @@ import java.util.Set;
                     @UniqueConstraint(columnNames = "title")
             })
     public class Event {
-
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
@@ -29,16 +28,13 @@ import java.util.Set;
         @Column(name = "imagedata",length = 1000)
         private byte[] imageData;
         private String title;
-
         private Date startDate;
         private Date endDate;
         private String description;
         private String lieu;
         private EventType type;
-
         private String lang;
         private String lat;
-
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
         @JoinColumn(name = "event_id")
         private Set<Activity> activites = new HashSet<>();
