@@ -1,5 +1,6 @@
 package tn.eesprit.gestionevenementback.Controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
+
+@Tag(name = "User", description = "User management APIs")
 public class UserController {
     private final IUserService userService;
     private final PasswordEncoder encoder;
@@ -65,7 +68,7 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
         user.setActive(true);
         userRepository.save(user);
-      String status=  this.emailService.sendSimpleMail(user.getEmail());
+      String status=  emailService.sendSimpleMail(user.getEmail());
       System.out.println(status);
         return new ResponseEntity<>(user, HttpStatus.OK);
 

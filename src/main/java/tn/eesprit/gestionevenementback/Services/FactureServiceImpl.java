@@ -45,13 +45,13 @@ public class FactureServiceImpl implements IFactureService{
     public void sednFacture(String toEmail, String attachment) throws MessagingException {
             MimeMessage mimeMessage=javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage,true);
-            mimeMessageHelper.setFrom("arjungautam8877@gmail.com");
+            mimeMessageHelper.setFrom("imenzpidev@gmail.com");
             mimeMessageHelper.setTo(toEmail);
             mimeMessageHelper.setText("Votre facture");
             mimeMessageHelper.setSubject("Facture pour votre reservation");
 
             FileSystemResource fileSystemResource=
-                    new FileSystemResource(new File("C:\\Users\\ThinkPad\\Downloads\\"+attachment));
+                    new FileSystemResource(new File("C:/Users/ThinkPad/Downloads/"+attachment));
             mimeMessageHelper.addAttachment(fileSystemResource.getFilename(),
                     fileSystemResource);
             javaMailSender.send(mimeMessage);

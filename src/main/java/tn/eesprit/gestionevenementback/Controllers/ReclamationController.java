@@ -1,5 +1,6 @@
 package tn.eesprit.gestionevenementback.Controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 @RequestMapping("/api/reclamation")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Reclamation", description = "Reclamation management APIs")
 
 public class ReclamationController {
     @Autowired

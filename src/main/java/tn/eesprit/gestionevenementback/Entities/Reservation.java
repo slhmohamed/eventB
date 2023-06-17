@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,13 +27,15 @@ public class Reservation implements Serializable {
     @OneToOne
     Event event;
 
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Activity> activites = new HashSet<>();
     Date dateReservation  ;
 
 
 
-public Reservation(User user,Event event ){
+public Reservation(User user,Event event,Set<Activity> activites ){
     this.user=user;
+    this.activites=activites;
     this.event=event;
     SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
     Date dateReservation = new Date(System.currentTimeMillis());

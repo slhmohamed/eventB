@@ -43,10 +43,17 @@ public class ReservationController {
         if (user.getEvents().contains(event.get())) {
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-
-            return new ResponseEntity<>(iReservationService.affecteReservatioToUser(eventId, userId), HttpStatus.OK);
         }
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/reserver/{userId}/reservation/{eventId}")
+    public ResponseEntity<?> reserver(@PathVariable (value="userId") Long userId,
+                                                     @PathVariable (value="eventId") Long eventId,@RequestBody List<Long> activites
+    ) {
+
+        Optional<User> _user = userRepository.findById(userId);
+
+        return  new ResponseEntity<>(iReservationService.affecteReservatioToUser(eventId,userId,activites),HttpStatus.OK);
     }
 
     @GetMapping("/users/reservations")
@@ -68,7 +75,7 @@ public class ReservationController {
                                                             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                             Date endD){
 
-        List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetweens(start,endD);
+        List<Reservation> reservationList=reservationRepository.findAllByDateReservationBetweenss(start,endD);
     return new ResponseEntity<>(reservationList, HttpStatus.OK);
     }
     @GetMapping("/statistique")
