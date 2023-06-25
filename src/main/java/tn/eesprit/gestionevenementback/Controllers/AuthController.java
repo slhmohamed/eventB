@@ -54,8 +54,6 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         User _user = userRepository.findByUsername(loginRequest.getUsername()).get();
 
-
-
             if (_user.isBlocked()) {
 
                 return ResponseEntity
@@ -71,7 +69,7 @@ public class AuthController {
             }
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            System.out.println(authentication);
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
 
@@ -108,7 +106,6 @@ public class AuthController {
 
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),encoder.encode(signUpRequest.getPassword()));
-
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -129,10 +126,7 @@ public class AuthController {
                         Role membreRole = roleRepository.findByName(ERole.membre)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(membreRole);
-
                         break;
-
-
                 }
 
             });

@@ -43,15 +43,15 @@ public class ReservationController {
         if (user.getEvents().contains(event.get())) {
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return  new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/reserver/{userId}/reservation/{eventId}")
     public ResponseEntity<?> reserver(@PathVariable (value="userId") Long userId,
-                                                     @PathVariable (value="eventId") Long eventId,@RequestBody List<Long> activites
+                                                     @PathVariable (value="eventId") Long eventId,
+                                      @RequestBody List<Long> activites
     ) {
-
-        Optional<User> _user = userRepository.findById(userId);
 
         return  new ResponseEntity<>(iReservationService.affecteReservatioToUser(eventId,userId,activites),HttpStatus.OK);
     }

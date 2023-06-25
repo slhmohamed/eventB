@@ -21,10 +21,7 @@ import tn.eesprit.gestionevenementback.Services.EmailService;
 import tn.eesprit.gestionevenementback.Services.IUserService;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +35,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final RoleRepository roleRepository;
+
     @GetMapping("/get-users")
     public ResponseEntity<List<User>> getUsers( )  {
         List<User> users = userRepository.findAll();
@@ -74,13 +72,16 @@ public class UserController {
 
     }
     @PutMapping("/desactive-user/{id}")
-    public ResponseEntity<User> desactiveAccount(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found user with id = " + id));
-        user.setActive(false);
-        userRepository.save(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<?> desactiveAccount(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+       Optional< User> user = userRepository.findById(id);
+       if(user.isPresent()) {
 
+           user.get().setActive(false);
+           userRepository.save(user.get());
+           return new ResponseEntity<>(user, HttpStatus.OK);
+       }else{
+           return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+       }
     }
     @PutMapping("/update-user/{id}")
     public ResponseEntity<User> getEvent(@PathVariable(value = "id") Long id,@RequestBody User user) throws ResourceNotFoundException {
@@ -184,6 +185,62 @@ public class UserController {
             System.out.println("xxxxxxxxxx + " + _user.getNbIteration());
 
             userRepository.save(_user);
+        }
+    }
+    @PutMapping("/nbIteration/{id}")
+    public void nbIteration(@PathVariable Long id){
+        Optional<User> user=userRepository.findById(id);
+        if(user.isPresent()){
+            User _user=user.get();
+            _user.setNbConnexion(_user.getNbConnexion()+1);
+            userRepository.save(_user);
+        }
+    }
+    @PutMapping("/forgetPassword/{email}")
+    public ResponseEntity<?> forgetPassword(@PathVariable("email") String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: User not foudn !!"));
+        }else {
+        String token = UUID.randomUUID().toString();
+        System.out.println(token);
+        emailService.sendMailReset(user.get().getEmail(),token);
+        User _user=user.get();
+          _user.setToken(token);
+         userRepository.save(_user);
+        return ResponseEntity
+                .ok()
+                .body(_user);
+
+
+    }
+    }
+    @PutMapping("/resetPassword/{token}")
+    public ResponseEntity<?> resetPassword(@PathVariable("token") String token,@RequestBody String newPassword) {
+       System.out.println(token);
+        System.out.println(newPassword);
+        Optional<User> user = userRepository.findByToken(token);
+        if (!user.isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: User not foudn !!"));
+        }else {
+
+           // emailService.sendMailReset(user.get().getEmail(),token);
+            User _user=user.get();
+            System.out.println(_user.toString());
+            _user.setToken("");
+            System.out.println(newPassword);
+            _user.setPassword(encoder.encode(newPassword));
+            System.out.println(_user.toString());
+            userRepository.save(_user);
+            return ResponseEntity
+                    .ok()
+                    .body(_user);
+
+
         }
     }
 }

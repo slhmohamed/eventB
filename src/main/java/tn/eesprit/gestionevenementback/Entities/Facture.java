@@ -20,15 +20,13 @@ public class Facture implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long FactureId;
-
-    Epayement payement;
-    LocalDateTime dateFacture;
-    private double sum;
-
-    public Facture(Epayement epayement,double sum){
-        this.payement=epayement;
+    @OneToOne
+     Reservation reservation;
+    Double sum;
+    public Facture(Reservation reservation,Double sum){
+        this.reservation=reservation;
         this.sum=sum;
-        this.dateFacture=LocalDateTime.now();
+
     }
 
 

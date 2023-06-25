@@ -19,4 +19,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query( "SELECT d.user ,COUNT(d) AS counts FROM Reservation d    GROUP BY d.user    ORDER BY counts desc ")
     List<Object[]> statUser( );
+
 }

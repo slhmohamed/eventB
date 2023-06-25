@@ -12,11 +12,14 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
-
+    Optional<User> findByToken(String token);
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
     List<User> findUserByEmail (String value);
+
+
+    Optional<User> findByEmail(String email);
 
    // @Query("SELECT  COUNT(c.events) as counts FROM User AS c GROUP BY c.events ORDER BY counts DESC")
    // @Query("SELECT  c.events from User as c GROUP BY c.events_Id ")
@@ -24,7 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   //  @Query( "SELECT d.username ,COUNT(e) FROM User d JOIN d.events e GROUP BY d.username")
       int limit = 10;
-  @Query( "SELECT d.username ,COUNT(e) AS counts FROM User d JOIN d.events e GROUP BY d.username    ORDER BY counts ")
-    List<Object[]> statEvent( );
+
 
 }

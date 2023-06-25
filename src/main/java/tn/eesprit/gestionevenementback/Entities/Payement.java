@@ -16,11 +16,15 @@ public class Payement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-
     @OneToOne
-    Logistique logistique;
-    @OneToOne(cascade = CascadeType.PERSIST)
     Reservation reservation;
+    Double sum;
+
+    Boolean status=false;
+    public Payement(Reservation reservation,Double sum){
+        this.reservation=reservation;
+        this.sum=sum;
+
+    }
 
 }

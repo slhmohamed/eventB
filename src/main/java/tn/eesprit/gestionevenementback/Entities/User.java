@@ -46,6 +46,10 @@ public class User {
 
     private Long nbIteration =0L;
 
+    private String token="";
+
+    private Long nbConnexion = 0L;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

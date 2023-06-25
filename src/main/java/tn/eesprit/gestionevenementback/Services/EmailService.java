@@ -74,4 +74,32 @@ public class EmailService {
         }
     }
 
+
+    public String sendMailReset(String to,String token)
+    {
+
+        // Try block to check for exceptions
+        try {
+
+            // Creating a simple mail message
+            SimpleMailMessage mailMessage
+                    = new SimpleMailMessage();
+
+            // Setting up necessary details
+            mailMessage.setFrom("femarwa965@gmail.com");
+            mailMessage.setTo(to);
+            mailMessage.setSubject("Reset password code ");
+            String text="Code de réinitialisation est : " + token;
+            mailMessage.setText(text);
+            // Sending the mail
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            return "Error while Sending Mail";
+        }
+    }
+
 }

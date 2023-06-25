@@ -10,28 +10,26 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Reservation implements Serializable {
+
+public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String status="Not confirmed";
+    @GeneratedValue
+      Long id;
+      String status="Not confirmed";
     @OneToOne
      User user;
     @OneToOne
     Event event;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<Activity> activites = new HashSet<>();
+    @JoinColumn(name = "reservation_id")
+    Set<Activity> activites = new HashSet<>();
     Date dateReservation  ;
-
-
 
 public Reservation(User user,Event event,Set<Activity> activites ){
     this.user=user;
